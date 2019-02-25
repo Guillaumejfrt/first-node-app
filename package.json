@@ -1,0 +1,10 @@
+{
+  "name": "first-node-app",
+  "version": "1.0.0",
+  "description": "app for learning",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}

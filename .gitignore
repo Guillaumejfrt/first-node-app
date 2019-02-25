@@ -1,0 +1,16 @@
+# Ignore application configuration
+.bundle
+log/*.log
+tmp/**/*
+tmp/*
+*.swp
+.DS_Store
+public/assets
+/config/application.yml
+/public/packs
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity
+dist
+.env*
