@@ -1,0 +1,16 @@
+body {
+  font-family: Consolas,Monaco,"Andale Mono",monospace;
+}
+
+h1 {
+  color: red;
+}
+
+.central {
+  min-height: 250px;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
