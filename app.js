@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const PORT = 3000;
+let frenchMovies = [];
 
 app.use('/public', express.static('public'));
 
@@ -14,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/movies', (req, res) => {
-  const frenchMovies = [
+  frenchMovies = [
     {
       title: "Le fabuleux destin d'Amélie Poulain",
       year: 1980
@@ -49,7 +50,10 @@ app.get('/movies/:id/:title', (req, res) => {
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.post('/movies', urlencodedParser, (req, res) => {
-  console.log(req.body.title);
+  const newMovie = { title: req.body.title, year: req.body.year }
+  frenchMovies = [...frenchMovies, newMovie]; // this syntax creates a new array with frenchMovies and newMovie
+  console.log(frenchMovies);
+
   res.sendStatus(201);
   // const title = req.params.title;
   // const year = req.params.year;

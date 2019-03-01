@@ -28,5 +28,28 @@
       </div>
     </div>
     <% include ./partials/footer %>
+
+    <script>
+      const form = document.querySelector('form');
+      form.addEventListener('submit', addMovie);
+
+      const addMovie = () => {
+        e.preventDefault();
+        fetch('/movies')
+      }
+
+      if (window.fetch) {
+        fetch("/movies", {
+          method: 'post',
+          body: new formData(form)
+        })
+        .then(checkStatus)
+        .catch((err) => {
+          console.error('request failed', error);
+        });
+      } else {
+        // jQuery, XHR (Xml Http Request)
+      }
+    </script>
   </body>
 </html>
