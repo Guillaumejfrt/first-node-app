@@ -11,7 +11,7 @@
       <% include ./partials/header %>
 
       <h1>liste des films</h1>
-      <ul>
+      <ul id="movies-list">
         <% frenchMovies.forEach((movie) => { %>
           <li><%= movie.title %> - <%= movie.year %></li>
         <% })%>
@@ -30,26 +30,41 @@
     <% include ./partials/footer %>
 
     <script>
+      const checkStatus = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          const movieList = document.getElementById('movies-list');
+
+          let newMovieLi = document.createElement('li');
+          const movieTitle = document.getElementById('title').value;
+          const movieYear = document.getElementById('year').value;
+          newMovieLi.innerHTML = `${movieTitle} - ${movieYear}`;
+          movieList.appendChild(newMovieLi);
+          // movieList.insertAdjacentHTML('beforeend', newMovieLi.innerHTML);
+          document.querySelector('form').reset();
+          document.getElementById('title').focus();
+        }
+      }
+
+      const addMovie = (e) => {
+        e.preventDefault();
+
+        if (window.fetch) {
+          fetch("/movies", {
+            method: 'post',
+            body: new FormData(form)
+          })
+          .then(checkStatus)
+          .catch((error) => {
+            console.error('request failed', error);
+          });
+
+        } else {
+          // jQuery, XHR (Xml Http Request)
+        }
+      }
+
       const form = document.querySelector('form');
       form.addEventListener('submit', addMovie);
-
-      const addMovie = () => {
-        e.preventDefault();
-        fetch('/movies')
-      }
-
-      if (window.fetch) {
-        fetch("/movies", {
-          method: 'post',
-          body: new formData(form)
-        })
-        .then(checkStatus)
-        .catch((err) => {
-          console.error('request failed', error);
-        });
-      } else {
-        // jQuery, XHR (Xml Http Request)
-      }
     </script>
   </body>
 </html>
