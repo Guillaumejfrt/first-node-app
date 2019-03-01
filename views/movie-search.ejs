@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <title>Express Movies</title>
+    <link rel="stylesheet" href="../public/style.css">
+  </head>
+  <body>
+    <% include ./partials/header %>
+    <h1>let's search</h1>
+    <div>
+      <input type="text" name="term" id="term" placeholder="a film, title, ...">
+      <button id="btn-search">chercher</button>
+    </div>
+
+    <div id="results">
+
+    </div>
+    <% include ./partials/footer %>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      const API_KEY ="8417d87d7e32471f4ad4d034f83ffff7"
+      const btnSearch = document.getElementById("btn-search");
+
+      const displayResults = (results) => {
+        const resultsContainer = document.getElementById('results');
+
+        resultsContainer.innerText = ''; // .innertHTML ='' did not empty the container....!!!!!!!!!!!!!!!!!!!
+        results.forEach((result) => {
+          let movieP = document.createElement('div');
+          movieP.innerHTML = result.title
+          resultsContainer.appendChild(movieP);
+        })
+      }
+
+      const search = (e) => {
+        const term = document.getElementById('term');
+        const query = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${term.value}`
+        axios.get(query)
+          .then((response) => {
+            console.log(response.data.results);
+            displayResults(response.data.results);
+          });
+      }
+      btnSearch.addEventListener('click', search);
+
+    </script>
+  </body>
+</html>

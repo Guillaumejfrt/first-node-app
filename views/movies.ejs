@@ -31,17 +31,9 @@
 
     <script>
       const checkStatus = (response) => {
+        // console.log(response);
         if (response.status >= 200 && response.status < 300) {
-          const movieList = document.getElementById('movies-list');
-
-          let newMovieLi = document.createElement('li');
-          const movieTitle = document.getElementById('title').value;
-          const movieYear = document.getElementById('year').value;
-          newMovieLi.innerHTML = `${movieTitle} - ${movieYear}`;
-          movieList.appendChild(newMovieLi);
-          // movieList.insertAdjacentHTML('beforeend', newMovieLi.innerHTML);
-          document.querySelector('form').reset();
-          document.getElementById('title').focus();
+          return response.json(); // !!!!!!!!!!!!!!!!!!!!!!!!!!! WE MUST RETURN !!!!!!!!!!!!! otherwise we just get a response object, not the data inside of it
         }
       }
 
@@ -51,9 +43,26 @@
         if (window.fetch) {
           fetch("/movies", {
             method: 'post',
-            body: new FormData(form)
+            body: new FormData(form),
+            headers: { Accept: 'application/json' }
           })
           .then(checkStatus)
+          .then((data) => {
+            const frenchMovies = data.frenchMovies;
+            console.log(frenchMovies);
+            const movieList = document.getElementById('movies-list');
+            movieList.innerHTML = '';
+
+            frenchMovies.forEach((movie) => {
+              let newMovieLi = document.createElement('li');
+              let movieTitle = movie.title;
+              let movieYear = movie.year;
+              newMovieLi.innerHTML = `${movieTitle} - ${movieYear}`;
+              movieList.appendChild(newMovieLi);
+            });
+            document.querySelector('form').reset();
+            document.getElementById('title').focus();
+          })
           .catch((error) => {
             console.error('request failed', error);
           });

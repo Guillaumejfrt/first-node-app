@@ -1,8 +1,11 @@
 const express = require('express'); // framework Node
 const app = express(); // setup de l'appli avec express
 const bodyParser = require('body-parser'); // pour lire le body du requête HTTP
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const multer = require('multer'); // pour récupérer des champs postés et des photos
 const upload = multer();
+const jwt = require('jsonwebtoken');
+const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
 
 const PORT = 3000;
 let frenchMovies = [];
@@ -14,6 +17,33 @@ app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
   res.render('index');
+});
+
+app.get('/login', (req, res) => {
+  res.render('login.ejs', ({ title: "login" }));
+});
+
+const fakeUser = { email: 'guigui@gmail.com', password: "coucoucou" };
+
+app.post('/login', urlencodedParser, (req, res) => {
+  console.log('login post', req.body);
+  if(req.body) {
+    if (fakeUser.email === req.body.email && fakeUser.password === req.body.password) {
+      const myToken = jwt.sign({ iss: "http://guiguigjowebsite", user: "guiguijo", role: "moderator" }, secret);
+
+      res.json(myToken);
+      // res.json({
+      //   email: fakeUser.email,
+      //   favouriteMovie: "Il était une fois dans l'Ouest",
+      //   address: "5 place Salanson",
+      //   lastLoginDate: new Date()
+      // })
+    } else {
+      res.sendStatus(401);
+    }
+  } else {
+    res.sendStatus(500);
+  }
 });
 
 app.get('/movies', (req, res) => {
@@ -37,6 +67,10 @@ app.get('/movies', (req, res) => {
 app.get('/movie-details', (req, res) => {
 });
 
+app.get('/movie-search', (req, res) => {
+  res.render('movie-search.ejs');
+});
+
 app.get('/movies/add', (req, res) => {
   res.send("Let's add a new movie");
 });
@@ -49,7 +83,6 @@ app.get('/movies/:id/:title', (req, res) => {
 });
 
 // On passe le parser du body uniquement à la route qui en a besoin
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // app.post('/movies', urlencodedParser, (req, res) => {
 //   if(req.body) {
@@ -66,14 +99,14 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 // });
 
 app.post('/movies', upload.fields([]), (req, res) => {
-
   if(req.body) {
     const formData = req.body;
     // console.log(formData);
     const newMovie = { title: req.body.title, year: req.body.year }
     frenchMovies = [...frenchMovies, newMovie]; // this syntax creates a new array with frenchMovies and newMovie
     // console.log(frenchMovies);
-    res.sendStatus(201);
+    res.json({ frenchMovies: frenchMovies});
+    // res.sendStatus(201);
   } else {
     return res.sendStatus(500);
   }
