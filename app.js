@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.render('login.ejs', ({ title: "login" }));
+  res.render('login.ejs', ({ title: "Espace membre" }));
 });
 
 const fakeUser = { email: 'guigui@gmail.com', password: "coucoucou" };

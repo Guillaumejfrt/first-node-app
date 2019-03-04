@@ -12,7 +12,7 @@
     <div class="central">
       <h1><%= title %></h1>
       <br>
-      <div>
+      <div id="login">
         <form>
           <legend>Veuillez saisir vos identifiants</legend>
           <label for="email">email</label>
@@ -22,19 +22,38 @@
           <button type="submit">connexion</button>
         </form>
       </div>
+
+      <div id="profile" style="display: none">
+        <button id="deconnexion-btn">Déconnexion</button>
+      </div>
     </div>
 
     <footer>
       <% include ./partials/footer %>
     </footer>
+
     <script>
+      var deconnexionBtn = document.getElementById('deconnexion-btn');
+      var connectionLinkArea = document.querySelector("#connection-link");
+
+      function disconnect() {
+        localStorage.removeItem('token');
+        switchToLogOutMode();
+      }
+
+      deconnexionBtn.addEventListener('click', disconnect)
+
       var form = document.querySelector('form');
 
-      const loginUser = (event) => {
+      var loginArea = document.getElementById('login');
+
+      var profileArea = document.getElementById('profile');
+
+      function loginUser(event) {
         loginUserWithXHR(event);
       }
 
-      const loginUserWithXHR = (event) => {
+      function loginUserWithXHR(event) {
         event.preventDefault();
         console.log('loginUserWithXHR');
 
@@ -47,18 +66,50 @@
 
         xhr.onreadystatechange = function() {//Call a function when the state changes.
           if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+
             console.log('xhr:', xhr.response);
             var token = xhr.response;
 
             localStorage.setItem('token', token); // update local storage on client side
+
+
+            switchToLogInMode();
+
             form.reset();
           }
         }
+
         var email = document.getElementById('email').value;
         var password = document.getElementById('password').value;
         var payLoad = "email=" + email + "&" + "password=" + password;
         xhr.send(payLoad);
       }
+
+
+      function handleFormDisplay() {
+        if (localStorage.getItem('token')) {
+          switchToLogInMode();
+
+        } else {
+          switchToLogOutMode();
+        }
+      }
+
+      function switchToLogInMode() {
+        loginArea.style.display = 'none';
+        profileArea.style.display = 'block';
+        console.log(connectionLinkArea);
+        connectionLinkArea.innerHTML = "<a href='/login'>Déconnexion</a>";
+      }
+
+      function switchToLogOutMode() {
+        loginArea.style.display = 'block';
+        profileArea.style.display = 'none';
+        console.log(connectionLinkArea);
+        connectionLinkArea.innerHTML = "<a href='/login'>Connexion</a>";
+      }
+
+      handleFormDisplay();
 
       form.addEventListener("submit", loginUser);
     </script>
