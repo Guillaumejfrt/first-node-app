@@ -6,11 +6,13 @@ const multer = require('multer'); // pour récupérer des champs postés et des 
 const upload = multer();
 const jwt = require('jsonwebtoken');
 const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
+const expressJwt = require('express-jwt');
 
 const PORT = 3000;
 let frenchMovies = [];
 
 app.use('/public', express.static('public'));
+app.use(expressJwt({ secret: secret }).unless({ path: ['/login'] })); // protection de l'accès à toutes les pages. On demande un token à chaque fois.
 
 app.set('views', './views');
 app.set('view engine', 'ejs');
