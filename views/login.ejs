@@ -27,6 +27,9 @@
         <button id="deconnexion-btn">Déconnexion</button>
         <button id="display-payload">Voir le payload</button>
         <div id="decoded-payload"></div>
+        <div>
+          <a href="#" id="space-member">Espace membre</a>
+        </div>
       </div>
     </div>
 
@@ -35,6 +38,10 @@
     </footer>
 
     <script>
+
+      var spaceMemberLink = document.querySelector('#space-member');
+      spaceMemberLink.addEventListener('click', makeRequestWithToken);
+
       var deconnexionBtn = document.getElementById('deconnexion-btn');
       var connectionLinkArea = document.querySelector("#connection-link");
 
@@ -134,6 +141,28 @@
       handleFormDisplay();
 
       form.addEventListener("submit", loginUser);
+
+      function makeRequestWithToken(event) {
+        event.preventDefault();
+        var path = this.id;
+        console.log('path', path);
+        var tokenFromStorage = localStorage.getItem('token');
+        var config = {};
+
+        if (tokenFromStorage) {
+          config.headers = {'Authorization':'Bearer ' + JSON.parse(tokenFromStorage)}
+        }
+
+        axios.get(
+          'http://localhost:3000/' + path,
+          config
+        ).then((response) => {
+            console.log('success');
+            console.log(response);
+        }).catch((error) => {
+          console.log('makeRequestWithToken', error);
+        });
+      }
     </script>
   </body>
 </html>

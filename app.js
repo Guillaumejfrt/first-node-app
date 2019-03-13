@@ -12,7 +12,7 @@ const PORT = 3000;
 let frenchMovies = [];
 
 app.use('/public', express.static('public'));
-app.use(expressJwt({ secret: secret }).unless({ path: ['/login'] })); // protection de l'accès à toutes les pages. On demande un token à chaque fois.
+app.use(expressJwt({ secret: secret }).unless({ path: ['/', '/movies', '/login', '/movie-search'] })); // protection de l'accès à toutes les pages. On demande un token à chaque fois.
 
 app.set('views', './views');
 app.set('view engine', 'ejs');
@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
+  console.log(req.user);
   res.render('login.ejs', ({ title: "Espace membre" }));
 });
 
@@ -112,6 +113,12 @@ app.post('/movies', upload.fields([]), (req, res) => {
   } else {
     return res.sendStatus(500);
   }
+});
+
+app.get('/space-member', (req, res) => {
+  console.log('req.user', req.user);
+  res.send(req.user);
+
 });
 
 app.listen(PORT, () => {

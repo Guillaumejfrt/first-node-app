@@ -33,7 +33,7 @@
       const checkStatus = (response) => {
         // console.log(response);
         if (response.status >= 200 && response.status < 300) {
-          return response.json(); // !!!!!!!!!!!!!!!!!!!!!!!!!!! WE MUST RETURN !!!!!!!!!!!!! otherwise we just get a response object, not the data inside of it
+          return response.json(); // !!!!!!!!!!!!!!!!!!!!!!!!!!! WE MUST RETURN !!!!!!!!!!!!! otherwise we just get a response object, not the data inside it
         }
       }
 
